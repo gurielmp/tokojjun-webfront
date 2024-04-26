@@ -8,17 +8,30 @@ import IconButton from "@/components/ui/icon-button"
 import Currency from "@/components/ui/currency"
 import useCart from "@/hooks/use-cart"
 import { Product } from "@/types"
+import { useState } from "react"
 
 interface CartItemProps {
   data: Product
 }
 
 const CartItem: React.FC<CartItemProps> = ({ data }) => {
+  const [qty, setQty] = useState(1)
+
+  const onIncrement = () => {
+    setQty(qty + 1)
+  }
+  const onDecrement = () => {
+    if (qty > 1) {
+      setQty(qty - 1)
+    }
+  }
   const cart = useCart()
 
   const onRemove = () => {
     cart.removeItem(data.id)
   }
+
+  const totalPrice = data.price * qty
 
   return (
     <li className="flex py-6 border-b">
@@ -40,11 +53,23 @@ const CartItem: React.FC<CartItemProps> = ({ data }) => {
           </div>
           <div className="mt-1 flex flex-sm">
             <p className="text-gray-500">{data.color.name}</p>
-            <p className="text-gray-500 ml-4 border-t border-gray-200 pl-4">
-              {data.size.name}
-            </p>
+            <p className="text-gray-500 ml-4 pl-4">{data.size.name}</p>
           </div>
-          <Currency value={data.price} />
+          <Currency value={totalPrice} />
+        </div>
+        <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-6">
+          <div className="flex justify-between">
+            <p className="text-lg text-black">Qty</p>
+          </div>
+          <div className="mt-1 flex flex-sm">
+            <button onClick={onDecrement} className="text-gray-500 mr-4 pr-4">
+              -
+            </button>
+            <span className="text-gray-500 mx-2">{qty}</span>
+            <button onClick={onIncrement} className="text-gray-500 ml-4 pl-4">
+              +
+            </button>
+          </div>
         </div>
       </div>
     </li>
