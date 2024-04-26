@@ -31,13 +31,29 @@ const Summary = () => {
 
   const onCheckout = async () => {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_APP_URL}/checkout`,
+      `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
       {
         productIds: items.map((item) => item.id),
       }
     )
 
     window.location.href = response.data.url
+  }
+
+  //MIDTRANS SNAP
+  const checkout = async () => {
+    const data = {
+      id: "coba",
+      price: totalPrice,
+      name: "test",
+    }
+    const response = await fetch("http://localhost:3000/api/midtrans", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+
+    const requestData = await response.json()
+    console.log({ requestData })
   }
 
   return (
